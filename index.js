@@ -31,15 +31,27 @@ client.on('messageCreate', (message) => {
   // === TES COMMANDES COMMENCENT ICI ===
 
   if (command === 'ping') {
-    message.reply('Pong ! 🏓');
-  }
+    message.reply('Pong ! 🏓');}
 
   if (command === 'salut') {
-    message.reply(`Yo ${message.author.username}, bien ou quoi ?`);
-  }
+    message.reply(`Yo ${message.author.username}, bien ou quoi ?`);}
 
-if (command === 'sdk') { message.reply ( `wsh ${message.author} trkl et toi ?`);}
+  if (command === 'sdk') {
+    message.reply(`wsh ${message.author} trkl et toi ?`);}
+
+  if (command === 'note') {
+   const textAnoter = args.join(' ');
+   const noteAleatoire = 
+         Math.floor(Math.random() * 11);}
+  if (!textAnoter) {
+  return message.reply(`je note ${message.author} **${noteAleatoire}/10**`);
+  } else {
+  return message.reply(`je note ${textAnoter} **${noteAleatoire}/10**`);}
+
+
+
+
+}
 });
-
 // Connexion sécurisée au bot Discord
 client.login(process.env.DISCORD_TOKEN);
