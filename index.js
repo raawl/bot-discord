@@ -48,6 +48,29 @@ client.on('messageCreate', (message) => {
   } else {
   return message.reply(`je note ${textAnoter} **${noteAleatoire}/10**`);} }
 
+  if (command === 'pileouface') {
+   const choix =
+         Math.floor(Math.random() * 2);
+   const pari = args[0];
+  if (choix === 0 && !pari) {
+   return message.reply('c’est **pile** !');}
+else if (choix === 1 && !pari) {
+   return message.reply('c’est **face** !'); 
+  } else {
+   if (choix === 0 && pari === 'pile') {
+   return message.reply(`c’est **pile** ${message.author} tu as gagné !`);}
+  else if (choix === 1 && pari === 'face') {
+   return message.reply(`c’est **face ${message.author} tu as gagné !`);
+  } else {
+   if (choix === 0) {
+   return message.reply (`nul.. c’est **pile** ${message.author} tu as perdu..`)
+  } else {
+   return message.reply (`nul.. c’est **face** ${message.author} tu as perdu..`);}
+} } }
+
+
+
+
 
 
 
