@@ -51,7 +51,7 @@ client.on('messageCreate', (message) => {
 
 
 
-}
+
 });
 // Connexion sécurisée au bot Discord
 client.login(process.env.DISCORD_TOKEN);
