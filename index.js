@@ -42,11 +42,11 @@ client.on('messageCreate', (message) => {
   if (command === 'note') {
    const textAnoter = args.join(' ');
    const noteAleatoire = 
-         Math.floor(Math.random() * 11);}
+         Math.floor(Math.random() * 11);
   if (!textAnoter) {
   return message.reply(`je note ${message.author} **${noteAleatoire}/10**`);
   } else {
-  return message.reply(`je note ${textAnoter} **${noteAleatoire}/10**`);}
+  return message.reply(`je note ${textAnoter} **${noteAleatoire}/10**`);} }
 
 
 
