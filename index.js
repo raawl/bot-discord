@@ -14,7 +14,7 @@ const client = new Client({
   ] 
 });
 
-const PREFIX = "!"; // <-- C'est TON préfixe. Tu peux mettre ce que tu veux entre les guillemets.
+const PREFIX = "sheytan"; // <-- C'est TON préfixe. Tu peux mettre ce que tu veux entre les guillemets.
 
 client.on('ready', () => {
   console.log(`Le bot est connecté sous le nom de : ${client.user.tag}`);
