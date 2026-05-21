@@ -60,7 +60,7 @@ else if (choix === 1 && !pari) {
    if (choix === 0 && pari === 'pile') {
    return message.reply(`c’est **pile** ${message.author} tu as gagné !`);}
   else if (choix === 1 && pari === 'face') {
-   return message.reply(`c’est **face ${message.author} tu as gagné !`);
+   return message.reply(`c’est **face** ${message.author} tu as gagné !`);
   } else {
    if (choix === 0) {
    return message.reply (`nul.. c’est **pile** ${message.author} tu as perdu..`)
@@ -68,7 +68,19 @@ else if (choix === 1 && !pari) {
    return message.reply (`nul.. c’est **face** ${message.author} tu as perdu..`);}
 } } }
 
-
+   if (command === '8ball') {
+   const question = args.join(' ');
+   if (!question) {
+   return message.reply (`${message.author} pose moi un question tdc`);}
+   const reponseAleatoire =
+   Math.floor(Math.random() * 3)
+   if (reponseAleatoire === 0) {
+   return message.reply('oui je suis d’accord');}
+   if (reponseAleatoire === 1) {
+   return message.reply('non je ne pense pas');}
+   if (reponseAleatoire === 2) {
+   return message.reply('pourquoi pas oui');}
+  }
 
 
 
