@@ -20,7 +20,7 @@ client.on('ready', () => {
   console.log(`Le bot est connecté sous le nom de : ${client.user.tag}`);
 });
 
-client.on('messageCreate', (message) => {
+client.on('messageCreate', async (message)       => {
   // On ignore si le message ne commence pas par ton préfixe, ou si c'est un autre bot qui parle
   if (!message.content.startsWith(PREFIX) || message.author.bot) return;
 
