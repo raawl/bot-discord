@@ -73,14 +73,32 @@ else if (choix === 1 && !pari) {
    if (!question) {
    return message.reply (`${message.author} pose moi un question tdc`);}
    const reponseAleatoire =
-   Math.floor(Math.random() * 3)
+   Math.floor(Math.random() * 3);
    if (reponseAleatoire === 0) {
    return message.reply('oui je suis d’accord');}
    if (reponseAleatoire === 1) {
    return message.reply('non je ne pense pas');}
    if (reponseAleatoire === 2) {
    return message.reply('pourquoi pas oui');}
-  }
+ }
+   if (command === 'profil') {
+   const cible = message.mentions.users.first() || message.author;
+   const user = await cible.fetch();
+   const banniereURL = user.bannerURL({ dynamic: true, size: 1024 });
+
+   const fichiers = [cible.displayAvatarURL({ dynamic: true, size: 1024 })];
+
+   if (banniereURL) {
+      fichiers.push(banniereURL);}
+
+   const estLAutre = cible.id !== message.author.id;
+   let texte = banniereURL ? 'Voici le profile de' : 'Pas de banner voici la pp de';
+   texte += estLAutre ? `${cible}` : 'ton profil';
+
+    return message.reply
+    ({content: texte,files: fichiers });
+ }
+
 
 
 
