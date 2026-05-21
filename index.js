@@ -98,6 +98,83 @@ else if (choix === 1 && !pari) {
     return message.reply
     ({content: texte,files: fichiers });
  }
+  if (command === 'vacance') {
+    if (!message.member.permissions.has('ModerateMembers')) {
+      return message.reply("Tu n'as pas la permission de mute des membres ! ❌");
+    }
+
+    let cible = message.mentions.members.first();
+
+    if (!cible && message.reference) {
+      const messageRepondu = await message.channel.messages.fetch(message.reference.messageId);
+      cible = await message.guild.members.fetch(messageRepondu.author.id).catch(() => null);
+    }
+
+    if (!cible) {
+      return message.reply("Tu dois mentionner un membre ou répondre à son message pour le mute ! ❌");
+    }
+
+    if (!cible.moderatable) {
+      return message.reply("Je ne peux pas mute ce membre (rôle trop haut ou admin). ❌");
+    }
+
+    const texteDuree = message.mentions.members.first() ? args[1] : args[0];
+
+    if (!texteDuree) {
+      return message.reply("Il part en vacance combien de temps ?");
+    }
+
+    const valeur = parseInt(texteDuree);
+    const unite = texteDuree.replace(valeur, "").toLowerCase().trim();
+
+    if (isNaN(valeur) || valeur <= 0) {
+      return message.reply("La durée entrée n'est pas valide. Exemple : `10m`, `2h`.");
+    }
+
+    let tempsMillisecondes = 0;
+    let nomDuree = "";
+
+    if (["s", "sec", "second", "seconde", "secondes"].includes(unite)) {
+      tempsMillisecondes = valeur * 1000;
+      nomDuree = `${valeur} seconde(s)`;
+    } 
+    else if (["m", "min", "minute", "minutes"].includes(unite)) {
+      tempsMillisecondes = valeur * 60 * 1000;
+      nomDuree = `${valeur} minute(s)`;
+    } 
+    else if (["h", "hour", "hours", "heure", "heures"].includes(unite)) {
+      tempsMillisecondes = valeur * 60 * 60 * 1000;
+      nomDuree = `${valeur} heure(s)`;
+    } 
+    else if (["j", "d", "day", "days", "jour", "jours"].includes(unite)) {
+      tempsMillisecondes = valeur * 24 * 60 * 60 * 1000;
+      nomDuree = `${valeur} jour(s)`;
+    } 
+    else {
+      tempsMillisecondes = valeur * 60 * 1000;
+      nomDuree = `${valeur} minute(s)`;
+    }
+
+    const maxDiscord = 28 * 24 * 60 * 60 * 1000; 
+    if (tempsMillisecondes > maxDiscord) {
+      tempsMillisecondes = maxDiscord;
+      nomDuree = "28 jours (maximum autorisé)";
+    }
+    if (tempsMillisecondes < 1000) {
+      tempsMillisecondes = 1000;
+      nomDuree = "1 seconde (minimum autorisé)";
+    }
+
+    try {
+      await cible.send(`Ton vole RyanAir depart **${message.guild.name}** va durer **${nomDuree}**.`);
+    } catch (error) {
+      console.log(`Impossible d'envoyer un DM à ${cible.user.tag}.`);
+    }
+
+    await cible.timeout(tempsMillisecondes, `Mute par ${message.author.tag}`);
+
+    return message.reply(`**${cible.user.username}** a bien pris son vole RyanAir pour **${nomDuree}** !`);
+  }
 
 
 
