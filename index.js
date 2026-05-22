@@ -10,7 +10,8 @@ const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent
+    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.DirectMessages
   ] 
 });
 
@@ -118,7 +119,9 @@ else if (choix === 1 && !pari) {
       return message.reply("Je ne peux pas mute ce membre (rôle trop haut ou admin). ❌");
     }
 
-    const texteDuree = message.mentions.members.first() ? args[1] : args[0];
+    const tempsDansArgs1 = args[0] && args[0].startsWith("<@");
+    const texteDuree = tempsDansArgs1 ? args[1] : args[0];
+
 
     if (!texteDuree) {
       return message.reply("Il part en vacance combien de temps ?");
@@ -166,14 +169,14 @@ else if (choix === 1 && !pari) {
     }
 
     try {
-      await cible.send(`Ton vole RyanAir depart **${message.guild.name}** va durer **${nomDuree}**.`);
+      await cible.send(`Ton vole Ryan Air depart **${message.guild.name}** va durer **${nomDuree}**.`);
     } catch (error) {
       console.log(`Impossible d'envoyer un DM à ${cible.user.tag}.`);
     }
 
     await cible.timeout(tempsMillisecondes, `Mute par ${message.author.tag}`);
 
-    return message.reply(`**${cible.user.username}** a bien pris son vole RyanAir pour **${nomDuree}** !`);
+    return message.reply(`**${cible.user.username}** a bien pris son vole Ryan Air pour **${nomDuree}** !`);
   }
 
 
