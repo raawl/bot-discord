@@ -16,6 +16,8 @@ const client = new Client({
 });
 
 const PREFIX = "!"; // <-- C'est TON préfixe. Tu peux mettre ce que tu veux entre les guillemets.
+let nombreSecret = 
+Math.floor(Math.random() * 100) + 1;
 
 client.on('ready', () => {
   console.log(`Le bot est connecté sous le nom de : ${client.user.tag}`);
@@ -72,7 +74,7 @@ else if (choix === 1 && !pari) {
    if (command === '8ball') {
    const question = args.join(' ');
    if (!question) {
-   return message.reply (`${message.author} pose moi un question tdc`);}
+   return message.reply (`${message.author} pose moi une question tdc`);}
    const reponseAleatoire =
    Math.floor(Math.random() * 3);
    if (reponseAleatoire === 0) {
@@ -145,7 +147,7 @@ else if (choix === 1 && !pari) {
       tempsMillisecondes = valeur * 60 * 1000;
       nomDuree = `${valeur} minute(s)`;
     } 
-    else if (["h", "hour", "hours", "heure", "heures"].includes(unite)) {
+    else if (["minutos", "h", "hour", "hours", "heure", "heures"].includes(unite)) {
       tempsMillisecondes = valeur * 60 * 60 * 1000;
       nomDuree = `${valeur} heure(s)`;
     } 
@@ -161,15 +163,15 @@ else if (choix === 1 && !pari) {
     const maxDiscord = 28 * 24 * 60 * 60 * 1000; 
     if (tempsMillisecondes > maxDiscord) {
       tempsMillisecondes = maxDiscord;
-      nomDuree = "28 jours (maximum autorisé)";
+      nomDuree = '28 jours';
     }
     if (tempsMillisecondes < 1000) {
       tempsMillisecondes = 1000;
-      nomDuree = "1 seconde (minimum autorisé)";
+      nomDuree = '1 seconde';
     }
 
     try {
-      await cible.send(`Ton vole Ryan Air depart **${message.guild.name}** va durer **${nomDuree}**.`);
+      await cible.send(`Ton vole Ryan Air depart **${message.guild.name}** durera **${nomDuree}**.`);
     } catch (error) {
       console.log(`Impossible d'envoyer un DM à ${cible.user.tag}.`);
     }
@@ -178,7 +180,19 @@ else if (choix === 1 && !pari) {
 
     return message.reply(`**${cible.user.username}** a bien pris son vole Ryan Air pour **${nomDuree}** !`);
   }
-
+   if (command === 'justeprix') {
+   const proposition = parseInt(args[0]);
+   if (isNaN(proposition)) {
+   return message.reply(`Tu dois mettre un nombre entre **1 et 100** ${message.author} !`);}
+   if (proposition === nombreSecret) {
+nombreSecret =
+Math.floor(Math.random() * 100) + 1;
+   return message.reply(`Bravo tu as trouvé le juste prix etait bien **${proposition}** un nouveau nombre a etait choisi !`);}
+   if (proposition < nombreSecret) {
+   return message.reply(`c’est **plus** ${message.author}..`);}
+   if (proposition > nombreSecret) {
+   return message.reply(`c’est **moins** ${message.author}..`);}
+ }
 
 
 
