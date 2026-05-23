@@ -209,10 +209,10 @@ Math.floor(Math.random() * 100) + 1;
     let messageStatut = await message.reply("🔄 Pixelisation de l'image en cours, patiente un peu..");
 
     try {
-      const image = await Jimp.read(avatarURL);
+      const image = await jimp.read(avatarURL);
       image.pixelate(10); 
       
-      const buffer = await image.getBufferAsync(Jimp.MIME_PNG);
+      const buffer = await image.getBufferAsync(jimp.MIME_PNG);
 
       messageStatut = await messageStatut.edit({
         content: `Voici **<@${cible.id}>** en **pixel** !`,
@@ -240,14 +240,14 @@ Math.floor(Math.random() * 100) + 1;
     let messageStatut = await message.reply(`**<@${cible.id}>** va exploser..`);
 
     try {
-      const image = await Jimp.read(avatarURL);
+      const image = await jimp.read(avatarURL);
       
       const mapDeformation = image.clone();
       mapDeformation.invert().contrast(1);
       
       image.displace(mapDeformation, 20); 
 
-      const buffer = await image.getBufferAsync(Jimp.MIME_PNG);
+      const buffer = await image.getBufferAsync(jimp.MIME_PNG);
 
       messageStatut = await messageStatut.edit({
         content: `💥 **BOUM !** **<@${cible.id}>** a explosé !`,
