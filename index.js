@@ -14,6 +14,7 @@ const client = new Client({
     GatewayIntentBits.DirectMessages
   ] 
 });
+const jimp = require('jimp');
 
 const PREFIX = "!"; // <-- C'est TON préfixe. Tu peux mettre ce que tu veux entre les guillemets.
 let nombreSecret = 
@@ -193,6 +194,71 @@ Math.floor(Math.random() * 100) + 1;
    if (proposition > nombreSecret) {
    return message.reply(`c’est **moins** ${message.author}..`);}
  }
+     if (command === 'pixel') {
+    let cible = message.mentions.users.first();
+    
+    if (!cible && message.reference) {
+      cible = (await message.channel.messages.fetch(message.reference.messageId)).author;
+    }
+    
+    if (!cible) {
+      cible = message.author;
+    }
+    
+    const avatarURL = cible.displayAvatarURL({ extension: 'png', size: 1024 });
+    let messageStatut = await message.reply("🔄 Pixelisation de l'image en cours, patiente un peu..");
+
+    try {
+      const image = await Jimp.read(avatarURL);
+      image.pixelate(10); 
+      
+      const buffer = await image.getBufferAsync(Jimp.MIME_PNG);
+
+      messageStatut = await messageStatut.edit({
+        content: `Voici **<@${cible.id}>** en **pixel** !`,
+        files: [{ attachment: buffer, name: 'pp_pixel.png' }]
+      });
+
+    } catch (error) {
+      console.error(error);
+      return messageStatut.edit("❌ Une erreur est survenue en modifiant l'image..");
+    }
+  }
+
+  if (command === 'explose') {
+    let cible = message.mentions.users.first();
+    
+    if (!cible && message.reference) {
+      cible = (await message.channel.messages.fetch(message.reference.messageId)).author;
+    }
+    
+    if (!cible) {
+      cible = message.author;
+    }
+    
+    const avatarURL = cible.displayAvatarURL({ extension: 'png', size: 1024 });
+    let messageStatut = await message.reply(`**<@${cible.id}>** va exploser..`);
+
+    try {
+      const image = await Jimp.read(avatarURL);
+      
+      const mapDeformation = image.clone();
+      mapDeformation.invert().contrast(1);
+      
+      image.displace(mapDeformation, 20); 
+
+      const buffer = await image.getBufferAsync(Jimp.MIME_PNG);
+
+      messageStatut = await messageStatut.edit({
+        content: `💥 **BOUM !** **<@${cible.id}>** a explosé !`,
+        files: [{ attachment: buffer, name: 'explosion.png' }]
+      });
+
+    } catch (error) {
+      console.error(error);
+      return messageStatut.edit('❌  L’explosion a été desamorcée');
+    }
+  }
 
 
 
