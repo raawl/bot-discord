@@ -242,14 +242,37 @@ Math.floor(Math.random() * 100) + 1;
     try {
       const image = await jimp.read(avatarURL);
       
-      // Cet effet fait tourner les pixels au centre comme un tourbillon (effet twirl/vortex)
-      // Le premier chiffre (0.6) c'est la force, le deuxième (250) c'est le rayon du cercle
-      image.convolute([
-        [0, 0, 0],
-        [0, 1, 0],
-        [0, 0, 0]
-      ]); 
-const buffer = await image.getBufferAsync(jimp.MIME_PNG);
+      const width = image.bitmap.width;
+      const height = image.bitmap.height;
+      const centerX = width / 2;
+      const centerY = height / 2;
+      const radius = Math.min(width, height) / 2;
+      
+      const sourceImage = image.clone();
+
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const dx = x - centerX;
+          const dy = y - centerY;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < radius) {
+            const angle = 2.5 * (1 - distance / radius);
+            const sin = Math.sin(angle);
+            const cos = Math.cos(angle);
+
+            const sourceX = Math.floor(centerX + (dx * cos - dy * sin));
+            const sourceY = Math.floor(centerY + (dx * sin + dy * cos));
+
+            if (sourceX >= 0 && sourceX < width && sourceY >= 0 && sourceY < height) {
+              const pixelColor = sourceImage.getPixelColor(sourceX, sourceY);
+              image.setPixelColor(pixelColor, x, y);
+            }
+          }
+        }
+      }
+
+      const buffer = await image.getBufferAsync(jimp.MIME_PNG);
 
       messageStatut = await messageStatut.edit({
         content: `💥 **BOUM !** **<@${cible.id}>** a explosé !`,
