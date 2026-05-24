@@ -242,8 +242,6 @@ Math.floor(Math.random() * 100) + 1;
     try {
       const image = await jimp.read(avatarURL);
       
-      // Cet effet fait tourner les pixels au centre comme un tourbillon (effet twirl/vortex)
-      // Le premier chiffre (0.6) c'est la force, le deuxième (250) c'est le rayon du cercle
       image.convolute([
         [0, 0, 0],
         [0, 1, 0],
