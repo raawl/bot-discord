@@ -77,14 +77,24 @@ else if (choix === 1 && !pari) {
    if (!question) {
    return message.reply (`${message.author} pose moi une question tdc`);}
    const reponseAleatoire =
-   Math.floor(Math.random() * 3);
+   Math.floor(Math.random() * 8);
    if (reponseAleatoire === 0) {
    return message.reply('oui je suis d’accord');}
    if (reponseAleatoire === 1) {
    return message.reply('non je ne pense pas');}
    if (reponseAleatoire === 2) {
    return message.reply('pourquoi pas oui');}
- }
+   if (reponseAleatoire === 3) {
+   return message.reply('absoluement oui');}
+   if (reponseAleatoire === 4) {
+   return message.reply('alors la non');}
+   if (reponseAleatoire === 5) {
+   return message.reply('possiblement');}
+   if (reponseAleatoire === 6) {
+   return message.reply('il est peu probable');}
+   if (reponseAleatoire === 7) {
+   return message.reply('oui, mais juste pour te faire plaisir');}
+  }
    if (command === 'profil') {
    const cible = message.mentions.users.first() || message.author;
    const user = await cible.fetch();
@@ -225,7 +235,7 @@ Math.floor(Math.random() * 100) + 1;
     }
   }
 
-  if (command === 'explose') {
+  if (command === 'tsunami') {
     let cible = message.mentions.users.first();
     
     if (!cible && message.reference) {
@@ -237,7 +247,7 @@ Math.floor(Math.random() * 100) + 1;
     }
     
     const avatarURL = cible.displayAvatarURL({ extension: 'png', size: 1024 });
-    let messageStatut = await message.reply(`**<@${cible.id}>** va exploser..`);
+    let messageStatut = await message.reply(`tsunami en approche vers **<@${cible.id}>**..`);
 
     try {
       const image = await jimp.read(avatarURL);
@@ -275,13 +285,13 @@ Math.floor(Math.random() * 100) + 1;
       const buffer = await image.getBufferAsync(jimp.MIME_PNG);
 
       messageStatut = await messageStatut.edit({
-        content: `💥 **BOUM !** **<@${cible.id}>** a explosé !`,
+        content: `💥 **<@${cible.id}>** a été emporté par le tsunami !`,
         files: [{ attachment: buffer, name: 'explosion.png' }]
       });
 
     } catch (error) {
       console.error(error);
-      return messageStatut.edit('❌  L’explosion a été desamorcée');
+      return messageStatut.edit('❌  Ce n’etait qu’une simple vague.');
     }
   }
 
