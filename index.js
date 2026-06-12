@@ -20,9 +20,9 @@ const PREFIX = "!";
 let nombreSecret = Math.floor(Math.random() * 100) + 1;
 
 const CONFIG_VERIF = {
-  salonVerification: "1514850676755398856",
-  salonLogsStaff: "1514850739489345547",
-  roleAAttriber: "1514851493927190598"
+  salonVerification: "METS_ICI_L_ID_DU_SALON_VERIFICATION",
+  salonLogsStaff: "METS_ICI_L_ID_DU_SALON_LOGS_STAFF",
+  roleAAttriber: "METS_ICI_L_ID_DU_ROLE_A_DONNER"
 };
 
 client.on('ready', () => {
@@ -37,7 +37,7 @@ client.on('messageCreate', async (message) => {
     
     if (toutesLesImages.size !== 5) {
       await message.delete().catch(() => null);
-      return message.author.send("❌ Tu devez envoyer **exactement 5 photos** dans le salon de vérification !").catch(() => null);
+      return message.author.send("❌ Tu dois envoyer **exactement 5 photos** dans le salon de vérification !").catch(() => null);
     }
 
     const salonStaff = message.guild.channels.cache.get(CONFIG_VERIF.salonLogsStaff);
@@ -46,6 +46,7 @@ client.on('messageCreate', async (message) => {
     await message.delete().catch(() => null);
 
     const listeUrls = toutesLesImages.map(img => img.url);
+    const texteLiens = listeUrls.join('\n');
 
     const boutons = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
@@ -59,8 +60,7 @@ client.on('messageCreate', async (message) => {
     );
 
     await salonStaff.send({
-      content: `📷 Nouvelle demande de vérification de la part de : ${message.author} (${message.author.tag})`,
-      files: listeUrls,
+      content: `📷 **Nouvelle demande de vérification de :** ${message.author} (${message.author.tag})\n\n${texteLiens}`,
       components: [boutons]
     });
     
