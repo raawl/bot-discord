@@ -1,4 +1,3 @@
-
 const express = require('express');
 const app = express();
 app.get('/', (req, res) => res.send('Le bot est vivant !'));
@@ -44,12 +43,9 @@ client.on('messageCreate', async (message) => {
     const salonStaff = message.guild.channels.cache.get(CONFIG_VERIF.salonLogsStaff);
     if (!salonStaff) return;
 
-    // On récupère les liens des images AVANT de supprimer le message
-    const listeUrls = toutesLesImages.map(img => img.url);
-    const texteLiens = listeUrls.join('\n');
-
-    // On supprime d'abord le message d'origine
     await message.delete().catch(() => null);
+
+    const listeFichiers = toutesLesImages.map(img => img.url);
 
     const boutons = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
@@ -62,9 +58,9 @@ client.on('messageCreate', async (message) => {
         .setStyle(ButtonStyle.Danger)
     );
 
-    // On envoie le message final au staff. Discord va afficher les images normalement à partir des liens.
     await salonStaff.send({
-      content: `📷 **Nouvelle demande de vérification de :** ${message.author} (${message.author.tag})\n\n${texteLiens}`,
+      content: `📷 **Nouvelle demande de vérification de :** ${message.author} (${message.author.tag})`,
+      files: listeFichiers,
       components: [boutons]
     });
     
@@ -182,164 +178,4 @@ client.on('messageCreate', async (message) => {
     const unite = texteDuree.replace(valeur, "").toLowerCase().trim();
 
     if (isNaN(valeur) || valeur <= 0) {
-      return message.reply("La durée entrée n'est pas valide. Exemple : `10m`, `2h`.");
-    }
-
-    let tempsMillisecondes = 0;
-    let nomDuree = "";
-
-    if (["s", "sec", "second", "seconde", "secondes"].includes(unite)) {
-      tempsMillisecondes = valeur * 1000;
-      nomDuree = `${valeur} seconde(s)`;
-    } else if (["m", "min", "minute", "minutes"].includes(unite)) {
-      tempsMillisecondes = valeur * 60 * 1000;
-      nomDuree = `${valeur} minute(s)`;
-    } else if (["minutos", "h", "hour", "hours", "heure", "heures"].includes(unite)) {
-      tempsMillisecondes = valeur * 60 * 60 * 1000;
-      nomDuree = `${valeur} heure(s)`;
-    } else if (["j", "d", "day", "days", "jour", "jours"].includes(unite)) {
-      tempsMillisecondes = valeur * 24 * 60 * 60 * 1000;
-      nomDuree = `${valeur} jour(s)`;
-    } else {
-      tempsMillisecondes = valeur * 60 * 1000;
-      nomDuree = `${valeur} minute(s)`;
-    }
-
-    const maxDiscord = 28 * 24 * 60 * 60 * 1000; 
-    if (tempsMillisecondes > maxDiscord) {
-      tempsMillisecondes = maxDiscord;
-      nomDuree = '28 jours';
-    }
-    if (tempsMillisecondes < 1000) {
-      tempsMillisecondes = 1000;
-      nomDuree = '1 seconde';
-    }
-
-    try {
-      await cible.send(`Ton vole Ryan Air depart **${message.guild.name}** durera **${nomDuree}**.`);
-    } catch (error) {
-      console.log(`Impossible d'envoyer un DM à ${cible.user.tag}.`);
-    }
-
-    await cible.timeout(tempsMillisecondes, `Mute par ${message.author.tag}`);
-    return message.reply(`**${cible.user.username}** a bien pris son vole Ryan Air pour **${nomDuree}** !`);
-  }
-
-  if (command === 'justeprix') {
-    const proposition = parseInt(args[0]);
-    if (isNaN(proposition)) {
-      return message.reply(`Tu dois mettre un nombre entre **1 et 100** ${message.author} !`);
-    }
-    if (proposition === nombreSecret) {
-      nombreSecret = Math.floor(Math.random() * 100) + 1;
-      return message.reply(`Bravo tu as trouvé le juste prix etait bien **${proposition}** un nouveau nombre a etait choisi !`);
-    }
-    if (proposition < nombreSecret) return message.reply(`c’est **plus** ${message.author}..`);
-    if (proposition > nombreSecret) return message.reply(`c’est **moins** ${message.author}..`);
-  }
-
-  if (command === 'pixel') {
-    let cible = message.mentions.users.first();
-    if (!cible && message.reference) cible = (await message.channel.messages.fetch(message.reference.messageId)).author;
-    if (!cible) cible = message.author;
-    
-    const avatarURL = cible.displayAvatarURL({ extension: 'png', size: 1024 });
-    let messageStatut = await message.reply("🔄 Pixelisation de l'image en cours, patiente un peu..");
-
-    try {
-      const image = await jimp.read(avatarURL);
-      image.pixelate(10); 
-      const buffer = await image.getBufferAsync(jimp.MIME_PNG);
-      messageStatut = await messageStatut.edit({
-        content: `Voici **<@${cible.id}>** en **pixel** !`,
-        files: [{ attachment: buffer, name: 'pp_pixel.png' }]
-      });
-    } catch (error) {
-      console.error(error);
-      return messageStatut.edit("❌ Une erreur est survenue en modifiant l'image..");
-    }
-  }
-
-  if (command === 'tsunami') {
-    let cible = message.mentions.users.first();
-    if (!cible && message.reference) cible = (await message.channel.messages.fetch(message.reference.messageId)).author;
-    if (!cible) cible = message.author;
-    
-    const avatarURL = cible.displayAvatarURL({ extension: 'png', size: 1024 });
-    let messageStatut = await message.reply(`tsunami en approche vers **<@${cible.id}>**..`);
-
-    try {
-      const image = await jimp.read(avatarURL);
-      const width = image.bitmap.width;
-      const height = image.bitmap.height;
-      const centerX = width / 2;
-      const centerY = height / 2;
-      const radius = Math.min(width, height) / 2;
-      const sourceImage = image.clone();
-
-      for (let y = 0; y < height; y++) {
-        for (let x = 0; x < width; x++) {
-          const dx = x - centerX;
-          const dy = y - centerY;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-
-          if (distance < radius) {
-            const angle = 2.5 * (1 - distance / radius);
-            const sin = Math.sin(angle);
-            const cos = Math.cos(angle);
-            const sourceX = Math.floor(centerX + (dx * cos - dy * sin));
-            const sourceY = Math.floor(centerY + (dx * sin + dy * cos));
-
-            if (sourceX >= 0 && sourceX < width && sourceY >= 0 && sourceY < height) {
-              const pixelColor = sourceImage.getPixelColor(sourceX, sourceY);
-              image.setPixelColor(pixelColor, x, y);
-            }
-          }
-        }
-      }
-
-      const buffer = await image.getBufferAsync(jimp.MIME_PNG);
-      messageStatut = await messageStatut.edit({
-        content: `💥 **<@${cible.id}>** a été emporté par le tsunami !`,
-        files: [{ attachment: buffer, name: 'explosion.png' }]
-      });
-    } catch (error) {
-      console.error(error);
-      return messageStatut.edit('❌ Ce n’etait qu’une simple vague.');
-    }
-  }
-});
-
-client.on('interactionCreate', async (interaction) => {
-  if (!interaction.isButton()) return;
-
-  const [prefixe, action, idMembre] = interaction.customId.split('_');
-  if (prefixe !== 'verif') return;
-
-  const cibleEtoile = await interaction.guild.members.fetch(idMembre).catch(() => null);
-
-  if (action === 'oui') {
-    if (cibleEtoile) {
-      await cibleEtoile.roles.add(CONFIG_VERIF.roleAAttriber).catch(() => null);
-      await cibleEtoile.send(`✅ Félicitations ! Ta vérification sur **${interaction.guild.name}** a été acceptée par le staff ! Tu as maintenant accès au serveur.`).catch(() => null);
-    }
-    return interaction.update({
-      content: `✅ Demande acceptée par **${interaction.user.tag}** (Membre : <@${idMembre}>)`,
-      components: []
-      // Plus de "files: []" ou "embeds: []" ici, pour ne pas casser le message original
-    });
-  }
-
-  if (action === 'non') {
-    if (cibleEtoile) {
-      await cibleEtoile.send(`❌ Désolé, ta photo envoyée sur **${interaction.guild.name}** n'était pas éligible à la vérification. Merci de bien lire les consignes et de recommencer !`).catch(() => null);
-    }
-    return interaction.update({
-      content: `❌ Demande refusée par **${interaction.user.tag}** (Membre : <@${idMembre}>)`,
-      components: []
-      // Plus de "files: []" ou "embeds: []" ici, pour ne pas casser le message original
-    });
-  }
-});
-
-client.login(process.env.DISCORD_TOKEN);
+      return message.reply("La durée
