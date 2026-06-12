@@ -3,7 +3,7 @@ const app = express();
 app.get('/', (req, res) => res.send('Le bot est vivant !'));
 app.listen(process.env.PORT || 3000);
 
-const { Client, GatewayIntentBits, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { Client, GatewayIntentBits, ActionRowBuilder, ButtonBuilder, ButtonStyle, AttachmentBuilder } = require('discord.js');
 
 const client = new Client({ 
   intents: [
@@ -45,7 +45,8 @@ client.on('messageCreate', async (message) => {
 
     await message.delete().catch(() => null);
 
-    const listeFichiers = toutesLesImages.map(img => img.url);
+    // Transformation correcte des images en pièces jointes lisibles par Discord
+    const listeFichiers = toutesLesImages.map(img => new AttachmentBuilder(img.url, { name: img.name }));
 
     const boutons = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
