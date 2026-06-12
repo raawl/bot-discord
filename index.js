@@ -20,9 +20,9 @@ const PREFIX = "!";
 let nombreSecret = Math.floor(Math.random() * 100) + 1;
 
 const CONFIG_VERIF = {
-  salonVerification: "METS_ICI_L_ID_DU_SALON_VERIFICATION",
-  salonLogsStaff: "METS_ICI_L_ID_DU_SALON_LOGS_STAFF",
-  roleAAttriber: "METS_ICI_L_ID_DU_ROLE_A_DONNER"
+  salonVerification: "1514850676755398856",
+  salonLogsStaff: "1514850739489345547",
+  roleAAttriber: "1514851493927190598"
 };
 
 client.on('ready', () => {
