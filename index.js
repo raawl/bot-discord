@@ -37,7 +37,7 @@ client.on('messageCreate', async (message) => {
     
     if (toutesLesImages.size !== 5) {
       await message.delete().catch(() => null);
-      return message.author.send("❌ Tu dois envoyer **exactement 5 photos** dans le salon de vérification !").catch(() => null);
+      return message.author.send("❌ Tu devez envoyer **exactement 5 photos** dans le salon de vérification !").catch(() => null);
     }
 
     const salonStaff = message.guild.channels.cache.get(CONFIG_VERIF.salonLogsStaff);
@@ -46,7 +46,7 @@ client.on('messageCreate', async (message) => {
     await message.delete().catch(() => null);
 
     const listeUrls = toutesLesImages.map(img => img.url);
-    const texteLiens = listeUrls.join('\n');
+    const embeds = listeUrls.map(url => ({ image: { url: url } }));
 
     const boutons = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
@@ -60,7 +60,8 @@ client.on('messageCreate', async (message) => {
     );
 
     await salonStaff.send({
-      content: `📷 **Nouvelle demande de vérification de :** ${message.author} (${message.author.tag})\n\n${texteLiens}`,
+      content: `📷 **Nouvelle demande de vérification de :** ${message.author} (${message.author.tag})`,
+      embeds: embeds,
       components: [boutons]
     });
     
@@ -321,7 +322,8 @@ client.on('interactionCreate', async (interaction) => {
     }
     return interaction.update({
       content: `✅ Demande acceptée par **${interaction.user.tag}** (Membre : <@${idMembre}>)`,
-      components: []
+      components: [],
+      embeds: []
     });
   }
 
@@ -331,7 +333,8 @@ client.on('interactionCreate', async (interaction) => {
     }
     return interaction.update({
       content: `❌ Demande refusée par **${interaction.user.tag}** (Membre : <@${idMembre}>)`,
-      components: []
+      components: [],
+      embeds: []
     });
   }
 });
