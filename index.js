@@ -1,3 +1,4 @@
+
 const express = require('express');
 const app = express();
 app.get('/', (req, res) => res.send('Le bot est vivant !'));
@@ -43,10 +44,12 @@ client.on('messageCreate', async (message) => {
     const salonStaff = message.guild.channels.cache.get(CONFIG_VERIF.salonLogsStaff);
     if (!salonStaff) return;
 
-    await message.delete().catch(() => null);
-
+    // On récupère les liens des images AVANT de supprimer le message
     const listeUrls = toutesLesImages.map(img => img.url);
-    const embeds = listeUrls.map(url => ({ image: { url: url } }));
+    const texteLiens = listeUrls.join('\n');
+
+    // On supprime d'abord le message d'origine
+    await message.delete().catch(() => null);
 
     const boutons = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
@@ -59,9 +62,9 @@ client.on('messageCreate', async (message) => {
         .setStyle(ButtonStyle.Danger)
     );
 
+    // On envoie le message final au staff. Discord va afficher les images normalement à partir des liens.
     await salonStaff.send({
-      content: `📷 **Nouvelle demande de vérification de :** ${message.author} (${message.author.tag})`,
-      embeds: embeds,
+      content: `📷 **Nouvelle demande de vérification de :** ${message.author} (${message.author.tag})\n\n${texteLiens}`,
       components: [boutons]
     });
     
@@ -322,8 +325,8 @@ client.on('interactionCreate', async (interaction) => {
     }
     return interaction.update({
       content: `✅ Demande acceptée par **${interaction.user.tag}** (Membre : <@${idMembre}>)`,
-      components: [],
-      embeds: []
+      components: []
+      // Plus de "files: []" ou "embeds: []" ici, pour ne pas casser le message original
     });
   }
 
@@ -333,8 +336,8 @@ client.on('interactionCreate', async (interaction) => {
     }
     return interaction.update({
       content: `❌ Demande refusée par **${interaction.user.tag}** (Membre : <@${idMembre}>)`,
-      components: [],
-      embeds: []
+      components: []
+      // Plus de "files: []" ou "embeds: []" ici, pour ne pas casser le message original
     });
   }
 });
