@@ -43,10 +43,25 @@ client.on('messageCreate', async (message) => {
     const salonStaff = message.guild.channels.cache.get(CONFIG_VERIF.salonLogsStaff);
     if (!salonStaff) return;
 
+    // Téléchargement sécurisé des images pour contourner le blocage Discord
+    const listeFichiers = [];
+    for (const img of toutesLesImages.values()) {
+      try {
+        const response = await fetch(img.url);
+        if (response.ok) {
+          const buffer = Buffer.from(await response.arrayBuffer());
+          listeFichiers.push(new AttachmentBuilder(buffer, { name: img.name }));
+        }
+      } catch (error) {
+        console.error("Erreur lors du traitement d'une image :", error);
+      }
+    }
+
     await message.delete().catch(() => null);
 
-    // Transformation correcte des images en pièces jointes lisibles par Discord
-    const listeFichiers = toutesLesImages.map(img => new AttachmentBuilder(img.url, { name: img.name }));
+    if (listeFichiers.length === 0) {
+      return message.author.send("❌ Impossible de traiter tes images. Réessaye avec un autre format !").catch(() => null);
+    }
 
     const boutons = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
