@@ -1,0 +1,3 @@
+**Conditions D’utilisation**
+
+En utilisant ce bot vous acceptez que ce dernier puisse voir les messages et images envoyés dans le serveur
