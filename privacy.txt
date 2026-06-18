@@ -1,0 +1,3 @@
+Politique de confidentialité
+
+Ce bot ne collecte, ne vend, et ne stock aucune donnée personnelle de façons permanente. Seulement des messages et des images envoyées dans le serveur peuvent être enregistré temporairement pour les transférer de nouveau dans le serveur, tout cela est soumis aux politiques de suppression de discord
