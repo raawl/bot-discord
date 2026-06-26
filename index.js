@@ -22,7 +22,7 @@ let nombreSecret = Math.floor(Math.random() * 100) + 1;
 const CONFIG_VERIF = {
   salonVerification: "1519923771811696751",
   salonLogsStaff: "1519924137483829338",
-  roleAAttriber: "1514851493927190598"
+  roleAAttriber: "1519925666743848991"
 };
 
 client.on('ready', () => {
