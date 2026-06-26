@@ -20,8 +20,8 @@ const PREFIX = "!";
 let nombreSecret = Math.floor(Math.random() * 100) + 1;
 
 const CONFIG_VERIF = {
-  salonVerification: "1514850676755398856",
-  salonLogsStaff: "1514850739489345547",
+  salonVerification: "1519923771811696751",
+  salonLogsStaff: "1519924137483829338",
   roleAAttriber: "1514851493927190598"
 };
 
